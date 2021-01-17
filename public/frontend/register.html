@@ -1,0 +1,203 @@
+<!--BISMILLAHI-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>Store - Your Best Marketplace</title>
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link href="style/main.css" rel="stylesheet" />
+  </head>
+
+  <body>
+
+    <!-- nav -->
+    <nav 
+      class="navbar navbar-expand-lg navbar-light navbar-store fixed-top navbar-fixed-top"
+      data-aos="fade-down"
+    >
+      <div class="container">
+        <a href="index.html" class="navbar-brand">
+          <img src="images/logo.svg" alt="logo">
+        </a>
+        <button 
+          class="navbar-toggler" 
+          type="button" 
+          data-toggle="collapse" 
+          data-target="#navbarResponsive"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a href="index.html" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="categories.html" class="nav-link">Categories</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">Rewards</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="page-content page-auth">
+        <div class="section-store-auth" data-aos="fade-up">
+            <div class="container">
+                    <div class="row align-items-center justify-content-center row-login" id="register">
+                        <div class="col-lg-4">
+                            <h2>
+                                Memulai jual beli <br>
+                                dengan cara terbaru.
+                            </h2>
+                            <form action="#" class="mt-3">
+                                <div class="form-group">
+                                    <label for="name">Full Name</label>
+                                    <input 
+                                        type="text" 
+                                        id="name" 
+                                        class="form-control is-valid"
+                                        autofocus
+                                        name="name"
+                                        v-model="name"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input 
+                                        type="text" 
+                                        id="email" 
+                                        name="email"
+                                        class="form-control is-invalid" 
+                                        v-model="email"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input 
+                                        type="text" 
+                                        id="password" 
+                                        class="form-control"
+                                    />
+                                </div>
+                                <div class="form-group">
+                                    <label>Store</label>
+                                    <p class="text-muted">
+                                        Apakah anda ingin membuka toko ?
+                                    </p>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                    <input 
+                                        type="radio" 
+                                        name="is_store_open" 
+                                        id="openStoreTrue" 
+                                        v-model="is_store_open" 
+                                        class="custom-control-input" 
+                                        :value="true"
+                                    />
+                                    <label for="openStoreTrue" class="custom-control-label">
+                                        Iya, boleh
+                                    </label>
+                                    </div>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                    <input 
+                                        type="radio" 
+                                        name="is_store_open" 
+                                        id="openStoreFalse" 
+                                        v-model="is_store_open" 
+                                        class="custom-control-input" 
+                                        :value="false"
+                                    />
+                                    <label for="openStoreFalse" class="custom-control-label">
+                                        Enggak, Makasih
+                                    </label>
+                                    </div>
+                                </div>
+                                <div class="form-group" v-if="is_store_open">
+                                    <label for="namaToko">Nama Toko</label>
+                                    <input 
+                                        type="text" 
+                                        id="namaToko" 
+                                        class="form-control"
+                                    />
+                                </div>
+                                <div class="form-group" v-if="is_store_open">
+                                    <label for="namaToko">Kategori</label>
+                                    <select name="kategori" id="kategori" class="form-control">
+                                        <option value="" disabled>Select category</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-block btn-success mt-4" type="submit">
+                                    Sign Up
+                                </button>
+                                <button class="btn btn-block btn-signup mt-2" type="submit">
+                                    Back to sign in
+                                </button>
+                            </form>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </duv>
+    </div>
+
+    <!-- footer -->
+    <footer class="container">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 text-center"> 
+              <p class="pt-4 pb-2">
+                2020 Copyright Store. Salam Hangat dari Bangkinang :)
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="/vendor/jquery/jquery.slim.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+    <script src="/vendor/vue/vue.js"></script>
+    <script src="https://unpkg.com/vue-toasted@1.1.28/dist/vue-toasted.min.js"></script>
+    <script>
+        Vue.use(Toasted);
+
+        var resgister = new Vue({
+            el: '#register',
+            mounted() {
+                AOS.init();
+                this.$toasted.error(
+                    "Maaf, tampaknya email sudah terdafar pada sistem kami.",
+                    {
+                        position: "top-center",
+                        className: "rounded",
+                        duration: 1000
+                    }
+                );
+            },
+            data: {
+                name: "muhammad syafiq",
+                email: "syafiq@gmail.com",
+                password: "",
+                is_store_open: true,
+                store_name: "",
+            },
+        });
+    </script>
+    <script src="scripts/navbar-scroll.js"></script>
+  </body>
+</html>
