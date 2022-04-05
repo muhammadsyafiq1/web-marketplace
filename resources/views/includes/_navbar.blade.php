@@ -35,7 +35,7 @@
                     role="button" 
                     data-toggle="dropdown"
                 >
-                @if (Auth::user()->avatar)
+               @if (Auth::user()->avatar)
                 <img 
                   src="{{Storage::url(Auth::user()->avatar)}}" 
                   alt="user" 
@@ -43,7 +43,7 @@
                   /> 
                 @else 
                 <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}" height="40" class="rounded-circle" />
-                @endif
+                @endif 
                     Hi, {{ Auth::user()->name }}
                 </a>
                 <div class="dropdown-menu">
