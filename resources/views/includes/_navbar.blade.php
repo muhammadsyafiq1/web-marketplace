@@ -5,10 +5,10 @@
         <a href="{{ route('home') }}" class="navbar-brand">
           <img src="/frontend/images/logo.svg" alt="logo">
         </a>
-        <button 
-          class="navbar-toggler" 
-          type="button" 
-          data-toggle="collapse" 
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
           data-target="#navbarResponsive"
         >
           <span class="navbar-toggler-icon"></span>
@@ -21,33 +21,22 @@
             <li class="nav-item">
               <a href="{{ route('category.product') }}" class="nav-link {{ (request()->is('categories')) ? 'active' : '' }} ">Categories</a>
             </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">Rewards</a>
-            </li>
           </ul>
           <!-- desktop menu -->
           <ul class="navbar-nav d-none d-lg-flex">
             <li class="nav-item dropdown">
-                <a 
-                    href="#" 
-                    class="nav-link" 
-                    id="navbarDropdown" 
-                    role="button" 
+                <a
+                    href="#"
+                    class="nav-link"
+                    id="navbarDropdown"
+                    role="button"
                     data-toggle="dropdown"
                 >
-               @if (Auth::user()->avatar)
-                <img 
-                  src="{{Storage::url(Auth::user()->avatar)}}" 
-                  alt="user" 
-                  class="rounded-circle mr-2 profile-picture"
-                  /> 
-                @else 
+
                 <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}" height="40" class="rounded-circle" />
-                @endif 
                     Hi, {{ Auth::user()->name }}
                 </a>
                 <div class="dropdown-menu">
-                    <a href="dashboard-account.html" class="dropdown-item">Setting</a>
                     @if (Auth::user()->roles === 'admin')
                       <a href="{{ route('admin.dashboard') }}" class="dropdown-item">Dashboard</a>
                     @else
@@ -127,10 +116,10 @@
     <a href="{{ route('home') }}" class="navbar-brand">
       <img src="/frontend/images/logo.svg" alt="logo">
     </a>
-      <button 
-        class="navbar-toggler" 
-        type="button" 
-        data-toggle="collapse" 
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
         data-target="#navbarResponsive">
         <span class="navbar-toggler-icon"></span>
       </button>

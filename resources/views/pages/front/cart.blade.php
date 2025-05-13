@@ -7,9 +7,9 @@
 @section('content')
 <div class="page-content page-details">
     <!-- BREADCRUMB -->
-    <section 
-      class="store-breadcrumbs" 
-      data-aos="fade-down" 
+    <section
+      class="store-breadcrumbs"
+      data-aos="fade-down"
       data-aos-delay="100"
     >
     <div class="container">
@@ -56,14 +56,13 @@
                           @forelse ($carts as $cart)
                           <tr>
                                 <td style="width: 25%;">
-                                    <img 
-                                    src="{{ Storage::url($cart->product->gallery->first()->image) }}" 
+                                    <img
+                                    src="{{ Storage::url($cart->product->gallery->first()->image) }}"
                                     class="cart-image"
                                 />
                                 </td>
                                 <td style="width: 35%;">
                                     <div class="product-title">{{ $cart->product->name }}</div>
-                                    <div class="product-subtitle">warna : {{ $cart->productvariant->color->name }} | ukuran : {{ $cart->productvariant->size->name }} </div>
                                     <div class="product-subtitle">{{ $cart->user->store_name }}</div>
                                 </td>
                                 <td style="width: 35%;">

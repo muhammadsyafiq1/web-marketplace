@@ -23,11 +23,11 @@ class ProductUserController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['gallery','user','category'])
-        ->whereHas('gallery')
-        ->where('user_id', Auth::user()->id)
-        ->paginate(12);
-
+        $products = Product::with(['gallery', 'user', 'category'])
+            ->whereHas('gallery')
+            ->where('user_id', Auth::user()->id)
+            ->paginate(12);
+        // dd($products);
         return view('pages.front.product-user', compact('products'));
     }
 
@@ -50,19 +50,25 @@ class ProductUserController extends Controller
      */
     public function store(CreateProductRequest $request)
     {
-        $data = $request->all();
-        $data['slug'] = Str::slug($request->name);
-        $data['user_id'] = Auth::user()->id;
-        $product = Product::create($data);
+
+        $product =  Product::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'stock' => $request->stock,
+            'category_id' => $request->category_id,
+            'description' => $request->description,
+            'user_id' => Auth::user()->id,
+            'slug' => Str::slug($request->name)
+        ]);
 
         $gallery = ([
             'product_id' => $product->id,
-            'image' => $request->file('image')->store('image_products','public'),
+            'image' => $request->file('image')->store('image_products', 'public'),
         ]);
-        Gallery::create($gallery); 
+        Gallery::create($gallery);
 
         return redirect(route('products.index'))
-        ->with('info','Anda bisa memberikan properti pada product anda');
+            ->with('info', 'Anda bisa memberikan properti pada product anda');
     }
 
     /**
@@ -76,9 +82,12 @@ class ProductUserController extends Controller
         $sizes = Size::all();
         $colors = Color::all();
         $categories = Category::all();
-        $product = Product::findOrFail($id);
+        $product = Product::with('productvariant', 'productvariant.color', 'productvariant.size')->findOrFail($id);
         return view('pages.front.product-user-detail', compact([
-            'product','categories','sizes','colors'
+            'product',
+            'categories',
+            'sizes',
+            'colors'
         ]));
     }
 
@@ -100,10 +109,32 @@ class ProductUserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function update(Request $request, $id)
     {
-        //
+        // Validasi input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'stock' => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'nullable|string',
+        ]);
+
+        $product = Product::findOrFail($id);
+
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->stock = $request->stock;
+        $product->category_id = $request->category_id;
+        $product->description = $request->description;
+
+        // Simpan
+        $product->save();
+
+        return redirect()->back()->with('success', 'Produk berhasil diperbarui.');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -115,13 +146,15 @@ class ProductUserController extends Controller
     {
         $gallery = Gallery::findOrFail($id);
         $gallery->delete();
-        return redirect()->back()->with('info','Gallery berhasil dihapus');
+        return redirect()->back()->with('info', 'Gallery berhasil dihapus');
     }
 
     public function addVariant(CreateVariantRequest $request)
     {
         $data = $request->all();
+
         ProductVariant::create($data);
+
         return redirect()->back()->with('info', 'variant berhasil ditambahkan');
     }
 
@@ -129,7 +162,6 @@ class ProductUserController extends Controller
     {
         $product = Product::find($id);
         $product->delete();
-        return redirect(route('products.index'))->with('info','Product berhasil Dihapus');
+        return redirect(route('products.index'))->with('info', 'Product berhasil Dihapus');
     }
-
 }

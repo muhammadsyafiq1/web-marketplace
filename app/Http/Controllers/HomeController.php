@@ -28,22 +28,20 @@ class HomeController extends Controller
     public function index()
     {
         $banners = Bann::all();
-        $products = Product::with(['gallery','productvariant'])
+        $products = Product::with(['gallery'])
             ->whereHas('gallery')
-            ->whereHas('productvariant')
             ->orderBy('id', 'desc')
             ->paginate(28);
-        $product_demands = Product::with(['gallery','productvariant'])
-            ->whereHas('productvariant')
+        $product_demands = Product::with(['gallery'])
             ->whereHas('gallery')
             ->where('sold_out', '>' , 0)
             ->orderBy('sold_out', 'DESC')
             ->limit(8)
             ->get();
-            
-        
+
+
         $categories = Category::all();
-        
+
         return view('pages.front.index', compact([
             'categories','products','product_demands','banners'
         ]));
@@ -64,11 +62,10 @@ class HomeController extends Controller
     {
         $carts = Cart::create([
             'user_id' => Auth::user()->id,
-            'product_variant_id' => $request->product_variant_id,
             'product_id' => $request->product_id,
         ]);
         // kurangi stock
-        $stock = ProductVariant::where('id', $carts->product_variant_id )->first();
+        $stock = Product::where('id', $carts->product_id )->first();
         $stock->decrement('stock');
 
         return redirect(route('cart'));
@@ -79,7 +76,7 @@ class HomeController extends Controller
         $sellTransaction = TransactionDetail::with(['transaction.user','product.gallery'])->whereHas('product', function($product){
             $product->where('user_id', Auth::user()->id);
         })->get();
-            
+
         $buyTransaction = TransactionDetail::with(['transaction.user','product.gallery'])->whereHas('transaction', function($transaction){
             $transaction->where('user_id', Auth::user()->id);
         })->get();

@@ -6,7 +6,7 @@
 
 @section('content')
 <style>
-    .dropdown-toggle::after 
+    .dropdown-toggle::after
     {
         display:none;
     }
@@ -35,7 +35,7 @@
                 </div>
             </div>
             @endif
-            <div class="row mt-4">
+            <div class="row mt-4 mb-3">
                 @forelse ($products as $product)
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="card-body card card-dashboard-product d-block">
@@ -50,8 +50,7 @@
                                 <form action="{{ route('products.destroy',$product->id) }}" method="POST" class="d-inline">
                                 @method('DELETE')
                                 @csrf
-                                    <a class="dropdown-item" href="{{ route('products.show',$product->id) }}">Options</a>
-                                    <a class="dropdown-item" href="#">Check Variant</a>
+                                    <a class="dropdown-item" href="{{ route('products.show',$product->id) }}">Show / Update</a>
                                     <div class="dropdown-divider"></div>
                                     <button type="submit" class="btn btn-block btn-sm btn-danger">
                                         Delete
@@ -64,7 +63,7 @@
                 @empty
                 <div class="alert alert-primary text-center">
                     <h5>Belum Ada Product</h5>
-                </div> 
+                </div>
                 @endforelse
             </div>
             <div class="row">

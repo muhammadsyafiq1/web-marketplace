@@ -24,7 +24,7 @@ class CreateVariantRequest extends FormRequest
     public function rules()
     {
         return [
-            'color_id' => 'required',
+            'color_id' => 'nullable',
             'size_id' => 'nullable',
             'stock' => 'required|integer',
         ];

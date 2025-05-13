@@ -22,55 +22,74 @@
         <div class="dashboard-content">
             <div class="row">
                 <div class="col-12">
-                    <form>
+                    <form action="{{ route('products.update', $product->id) }}" method="post">
+                        @csrf
+                        @method('PUT')
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-lg-4">
+                                    {{-- NAME --}}
+                                    <div class="col-lg-3">
                                         <div class="form-group">
                                             <label for="name">Product name</label>
-                                            <input type="text" id="name"class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $product->name }}">
+                                            <input type="text" id="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name', $product->name) }}">
                                             @error('name')
-                                                <span class="invalid-feedback">
-                                                    <div class="alert alert-danger">
-                                                        {{ $message }}
-                                                    </div>
-                                                </span>
+                                                <div class="invalid-feedback d-block">
+                                                    <div class="alert alert-danger p-1">{{ $message }}</div>
+                                                </div>
                                             @enderror
-                                        </div> 
+                                        </div>
                                     </div>
-                                    <div class="col-lg-4">
+
+                                    {{-- PRICE --}}
+                                    <div class="col-lg-3">
                                         <div class="form-group">
                                             <label for="price">Product price</label>
-                                            <input type="text" id="price"class="form-control @error('price') is-invalid @enderror" name="price" value="{{ $product->price }}">
+                                            <input type="text" id="price" class="form-control @error('price') is-invalid @enderror" name="price" value="{{ old('price', $product->price) }}">
                                             @error('price')
-                                                <span class="invalid-feedback">
-                                                    <div class="alert alert-danger">
-                                                        {{ $message }}
-                                                    </div>
-                                                </span>
+                                                <div class="invalid-feedback d-block">
+                                                    <div class="alert alert-danger p-1">{{ $message }}</div>
+                                                </div>
                                             @enderror
-                                        </div> 
+                                        </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group" >
+
+                                    {{-- CATEGORY --}}
+                                    <div class="col-lg-3">
+                                        <div class="form-group">
                                             <label>Kategori</label>
                                             <select name="category_id" id="category_id" class="form-control">
                                                 @foreach ($categories as $category)
-                                                    <option value="{{ $category->id }}" {{ $category->id == $product->category_id ? 'selected' : ''}}>
+                                                    <option value="{{ $category->id }}" {{ $category->id == old('category_id', $product->category_id) ? 'selected' : '' }}>
                                                         {{ $category->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
+
+                                    {{-- STOCK --}}
+                                    <div class="col-lg-3">
+                                        <div class="form-group">
+                                            <label for="stock">Stock</label>
+                                            <input type="text" id="stock" class="form-control @error('stock') is-invalid @enderror" name="stock" value="{{ old('stock', $product->stock) }}">
+                                            @error('stock')
+                                                <div class="invalid-feedback d-block">
+                                                    <div class="alert alert-danger p-1">{{ $message }}</div>
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    {{-- DESCRIPTION --}}
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="description">Description</label>
-                                            <textarea name="description" id="editor">{{ $product->description }}</textarea>
+                                            <textarea name="description" id="editor">{{ old('description', $product->description) }}</textarea>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col text-right">
                                         <button class="btn-block btn-success px-4" type="submit">
@@ -81,9 +100,10 @@
                             </div>
                         </div>
                     </form>
+
                 </div>
             </div>
-            <div class="row mt-3 mb-3">
+            {{-- <div class="row mt-3 mb-3">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
@@ -91,9 +111,9 @@
                                 <div class="col-12">
                                     <form class="form-inline" action="{{ route('add.variant') }}" method="POST">
                                         @csrf
-                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" name="id" value="">
                                         <select name="color_id" id="color_id" class="custom-select mb-2 mr-sm-2  @error('color_id') is-invalid @enderror" style="width: 200px;">
-                                            <option value="0" disabled="true" selected="true">Choose Color</option>
+                                            <option disabled="true" selected="true">Choose Color</option>
                                             @foreach ($colors as $color)
                                                 <option value="{{ $color->id }}">
                                                     {{ $color->name }}
@@ -101,14 +121,14 @@
                                             @endforeach
                                         </select>
                                         <select name="size_id" id="size_id" class="custom-select mb-2 mr-sm-2  @error('size_id') is-invalid @enderror" style="width: 200px;">
-                                            <option value="0" disabled="true" selected="true">Choose Size</option>
+                                            <option disabled="true" selected="true">Choose Size</option>
                                             @foreach ($sizes as $size)
                                                 <option value="{{ $size->id }}">
                                                     {{ $size->name }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <input type="number" name="stock" id="stock" placeholder="Enter Stock" class="form-control mb-2 mr-sm-2  @error('stock') is-invalid @enderror">
+                                        <input type="number" name="stock" id="stock" value="{{ $product->productvariant->stock ?? 0 }}" placeholder="Enter Stock" class="form-control mb-2 mr-sm-2  @error('stock') is-invalid @enderror">
                                         <button type="submit" class="btn btn-primary mb-2 px-4">
                                             Add Now
                                         </button>
@@ -118,8 +138,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row mb-2">
+            </div> --}}
+            <div class="row mb-2 mt-3">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">

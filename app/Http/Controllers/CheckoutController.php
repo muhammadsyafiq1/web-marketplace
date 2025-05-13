@@ -18,7 +18,7 @@ class CheckoutController extends Controller
 {
    public function proccessCheckout(Request $request)
    {
-        //update user  
+        //update user
         $user  = Auth::user();
         $user->update($request->except('total_price'));
 
@@ -64,35 +64,37 @@ class CheckoutController extends Controller
         // hapus cart setelah belanja
         $cart = Cart::where('user_id', $user->id)->delete();
 
+        return view('pages.front.success');
+
         //KONFIGURASI MIDTRANS
-        Config::$serverKey = config('services.midtrans.serverKey');
-        Config::$isProduction = config('services.midtrans.isProduction');
-        Config::$isSanitized = config('services.midtrans.isSanitized');
-        Config::$is3ds = config('services.midtrans.is3ds');
+        // Config::$serverKey = config('services.midtrans.serverKey');
+        // Config::$isProduction = config('services.midtrans.isProduction');
+        // Config::$isSanitized = config('services.midtrans.isSanitized');
+        // Config::$is3ds = config('services.midtrans.is3ds');
 
-         //KONFIGURASI MIDTRANS
-         $midtrans = [
-            'transaction_details' => [
-                'order_id' => $transaction_code,
-                'gross_amount' => (int) $request->total_price,
-            ],
-            'customer_details' => [
-                'first_name' => Auth::user()->name,
-                'email' => Auth::user()->email,
-            ],
-            'enabled_payments' => [
-                'gopay', 'permata_va', 'bank_transfer'
-            ],
-            'vtweb' => []
-        ];
+        //  //KONFIGURASI MIDTRANS
+        //  $midtrans = [
+        //     'transaction_details' => [
+        //         'order_id' => $transaction_code,
+        //         'gross_amount' => (int) $request->total_price,
+        //     ],
+        //     'customer_details' => [
+        //         'first_name' => Auth::user()->name,
+        //         'email' => Auth::user()->email,
+        //     ],
+        //     'enabled_payments' => [
+        //         'gopay', 'permata_va', 'bank_transfer'
+        //     ],
+        //     'vtweb' => []
+        // ];
 
-        try {
-            //get snap payment page url
-            $paymentUrl = Snap::createTransaction($midtrans)->redirect_url;
-            // redirect to snap payment page
-            return redirect($paymentUrl);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        // try {
+        //     //get snap payment page url
+        //     $paymentUrl = Snap::createTransaction($midtrans)->redirect_url;
+        //     // redirect to snap payment page
+        //     return redirect($paymentUrl);
+        // } catch (Exception $e) {
+        //     echo $e->getMessage();
+        // }
    }
 }

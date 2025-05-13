@@ -13,9 +13,9 @@
                     {{ session('info') }}
                 </div>
             @endif
-            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModal">
+            {{-- <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#exampleModal">
                 <i class="fa fa-plus white-text"></i>
-            </button>
+            </button> --}}
         </div>
         <div class="card-body">
         <div class="table-responsive">

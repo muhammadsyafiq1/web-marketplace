@@ -17,7 +17,7 @@ class TransactionUserController extends Controller
 
         $buyTransaction = TransactionDetail::with(['transaction.user','product.gallery'])->whereHas('transaction', function($transaction){
             $transaction->where('user_id', Auth::user()->id);
-        })->orderBy('id','DESC')->limit(10)->get();  
+        })->orderBy('id','DESC')->limit(10)->get();
 
         return view('pages.front.user-transaction' , compact([
             'sellTransaction','buyTransaction'

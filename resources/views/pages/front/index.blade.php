@@ -48,9 +48,9 @@
        <div class="col-6 col-md-3 col-lg-2" data-aos="fade-up" data-aos-delay="200">
             <a href="#" class="component-categories d-block">
               <div class="categories-image">
-                <img 
-                  src="{{ Storage::url($category->photo) }}" 
-                  alt="make up" 
+                <img
+                  src="{{ Storage::url($category->photo) }}"
+                  alt="make up"
                   class="w-100"
                 >
                 <p class="categories-text">{{ $category->name }}</p>
@@ -74,8 +74,8 @@
         <div class="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="100">
           <a href="{{ route('detail',$product->slug) }}" class="component-products d-block">
             <div class="products-thumbnail">
-              <div 
-                class="products-image" 
+              <div
+                class="products-image"
                 style="
                   @if($product->gallery)
                     background-image: url('{{ Storage::url($product->gallery->first()->image) }}')
@@ -86,6 +86,9 @@
               </div>
               </div>
               <div class="products-text">
+                <div class="products-text">
+                    {{ $product->name }} ({{ $product->stock ?? 0 }})
+                  </div>
               </div>
               <div class="products-price">
                 @if($product->productvariant)
@@ -121,13 +124,13 @@
         <div class="col-6 col-md-4 col-lg-3" data-aos="fade-up" data-aos-delay="100">
           <a href="{{ route('detail',$product->slug) }}" class="component-products d-block">
             <div class="products-thumbnail">
-              <div 
-                class="products-image" 
+              <div
+                class="products-image"
                 style="background-image: url('{{ Storage::url($product->gallery->first()->image) }}');">
               </div>
               </div>
               <div class="products-text">
-                {{ $product->name }} ({{ $product->productvariant->first()->stock }})
+                {{ $product->name }} ({{ $product->stock ?? 0 }})
               </div>
               <div class="products-price">
                 @if($product->productvariant)
@@ -154,6 +157,6 @@
       </div>
     </div>
   </section>
-  
+
 </div>
 @endsection

@@ -20,19 +20,19 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="name">Product name</label>
                                     <input type="text" id="name"class="form-control" name="name">
-                                </div> 
+                                </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="price">Price</label>
                                     <input type="text" id="price"class="form-control" name="price">
-                                </div> 
+                                </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="form-group" >
                                     <label>Kategori</label>
                                     <select name="category_id" id="category_id" class="form-control">
@@ -43,8 +43,14 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="stock">stock</label>
+                                    <input type="text" id="stock"class="form-control" name="stock">
+                                </div>
+                            </div>
                             <div class="col-md-12">
-                                <div class="form-grou">
+                                <div class="form-group">
                                     <label for="desc">Description</label>
                                     <textarea name="description" id="editor"></textarea>
                                     @error('description')
@@ -63,7 +69,7 @@
                                     <p class="text-muted">
                                         Kamu dapat memilih lebih dari satu foto
                                     </p>
-                                </div> 
+                                </div>
                             </div>
                         </div>
                         <div class="row">
