@@ -11,90 +11,63 @@ use App\Models\TransactionDetail;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Midtrans\Config;
 use Midtrans\Snap;
 
 class CheckoutController extends Controller
 {
-   public function proccessCheckout(Request $request)
-   {
-        //update user
-        $user  = Auth::user();
-        $user->update($request->except('total_price'));
+    public function proccessCheckout(Request $request)
+    {
+        // Mulai transaksi database
+        DB::beginTransaction();
 
-        // buat code transaction
-        $transaction_code = 'Transaction-'. mt_rand(000000,999999);
+        try {
+            // Update data user kecuali total_price
+            $user = Auth::user();
+            $user->update($request->except('total_price'));
 
-        // ambil cart user
-        $carts = Cart::with(['user','product.productvariant'])
-            ->where('user_id', $user->id)
-            ->get();
+            // Buat kode transaksi
+            $transaction_code = 'TRANSACTION-' . mt_rand(100000, 999999);
 
-        // create transaction
-        $transaction = Transaction::create([
-            'user_id' => $user->id,
-            'insurance_price' => 0,
-            'shipping_price' => 0,
-            'total_price' => $request->total_price,
-            'transaction_status' => 'pending',
-            'transaction_code' => $transaction_code
-        ]);
+            // Ambil isi keranjang user
+            $carts = Cart::with(['product'])->where('user_id', $user->id)->get();
 
-        // bongkar cart nya masukin ke detail
-        foreach($carts as $cart){
-            $transaction_detail_code = 'DETAIL-'. mt_rand(000000,999999);
-
-            TransactionDetail::create([
-                'transaction_id' => $transaction->id,
-                'product_id' => $cart->product->id,
-                'price' => $cart->product->price,
-                'shipping_status' => 'pending',
-                'resi' => '',
-                'transaction_detail_code' => $transaction_detail_code
+            // Buat transaksi utama
+            $transaction = Transaction::create([
+                'user_id' => $user->id,
+                'insurance_price' => 0,
+                'shipping_price' => 0,
+                'total_price' => $request->total_price,
+                'transaction_status' => 'pending',
+                'transaction_code' => $transaction_code,
             ]);
 
-            Comentar::create([
-                'user_id' => Auth::user()->id,
-                'product_id' => $cart->product->id,
-                'content' => ''
-            ]);
+            // Loop cart dan simpan ke detail transaksi
+            foreach ($carts as $cart) {
+                $detail_code = 'DETAIL-' . mt_rand(100000, 999999);
+
+                TransactionDetail::create([
+                    'transaction_id' => $transaction->id,
+                    'product_id' => $cart->product->id,
+                    'price' => $cart->product->price,
+                    'shipping_status' => 'pending',
+                    'resi' => '',
+                    'transaction_detail_code' => $detail_code,
+                ]);
+            }
+
+            // Hapus keranjang
+            Cart::where('user_id', $user->id)->delete();
+
+            // Commit transaksi
+            DB::commit();
+
+            // Arahkan ke halaman success
+            return view('pages.front.success');
+        } catch (\Exception $e) {
+            DB::rollback(); // Batalkan semua perubahan
+            return back()->with('error', 'Checkout gagal: ' . $e->getMessage());
         }
-
-
-        // hapus cart setelah belanja
-        $cart = Cart::where('user_id', $user->id)->delete();
-
-        return view('pages.front.success');
-
-        //KONFIGURASI MIDTRANS
-        // Config::$serverKey = config('services.midtrans.serverKey');
-        // Config::$isProduction = config('services.midtrans.isProduction');
-        // Config::$isSanitized = config('services.midtrans.isSanitized');
-        // Config::$is3ds = config('services.midtrans.is3ds');
-
-        //  //KONFIGURASI MIDTRANS
-        //  $midtrans = [
-        //     'transaction_details' => [
-        //         'order_id' => $transaction_code,
-        //         'gross_amount' => (int) $request->total_price,
-        //     ],
-        //     'customer_details' => [
-        //         'first_name' => Auth::user()->name,
-        //         'email' => Auth::user()->email,
-        //     ],
-        //     'enabled_payments' => [
-        //         'gopay', 'permata_va', 'bank_transfer'
-        //     ],
-        //     'vtweb' => []
-        // ];
-
-        // try {
-        //     //get snap payment page url
-        //     $paymentUrl = Snap::createTransaction($midtrans)->redirect_url;
-        //     // redirect to snap payment page
-        //     return redirect($paymentUrl);
-        // } catch (Exception $e) {
-        //     echo $e->getMessage();
-        // }
-   }
+    }
 }

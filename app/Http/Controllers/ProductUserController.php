@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Http\Requests\CreateVariantRequest;
+use Illuminate\Support\Facades\DB;
 
 class ProductUserController extends Controller
 {
@@ -50,25 +51,38 @@ class ProductUserController extends Controller
      */
     public function store(CreateProductRequest $request)
     {
+        DB::beginTransaction();
 
-        $product =  Product::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'category_id' => $request->category_id,
-            'description' => $request->description,
-            'user_id' => Auth::user()->id,
-            'slug' => Str::slug($request->name)
-        ]);
+        try {
+            // Simpan data produk
+            $product = Product::create([
+                'name' => $request->name,
+                'price' => $request->price,
+                'stock' => $request->stock,
+                'category_id' => $request->category_id,
+                'description' => $request->description,
+                'user_id' => Auth::id(),
+                'slug' => Str::slug($request->name),
+            ]);
 
-        $gallery = ([
-            'product_id' => $product->id,
-            'image' => $request->file('image')->store('image_products', 'public'),
-        ]);
-        Gallery::create($gallery);
+            // Simpan galeri gambar
+            $gallery = [
+                'product_id' => $product->id,
+                'image' => $request->file('image')->store('image_products', 'public'),
+            ];
+            Gallery::create($gallery);
 
-        return redirect(route('products.index'))
-            ->with('info', 'Anda bisa memberikan properti pada product anda');
+            DB::commit(); // Commit jika semua aman
+
+            return redirect(route('products.index'))
+                ->with('info', 'Anda bisa memberikan properti pada produk Anda.');
+
+        } catch (\Exception $e) {
+            DB::rollback(); // Batalkan jika terjadi error
+
+            return back()->withErrors(['error' => 'Gagal menyimpan produk: ' . $e->getMessage()])
+                         ->withInput();
+        }
     }
 
     /**
